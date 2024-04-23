@@ -1,8 +1,9 @@
 // ObjectForm.js
 
 import React, { useState } from "react";
+import axios from "axios";
 
-const ObjectForm = () => {
+const ObjectForm = ({ updateObjects }) => {
   // State to store the input value
   const [inputValue, setInputValue] = useState("");
 
@@ -12,12 +13,21 @@ const ObjectForm = () => {
   };
 
   // Function to handle form submission
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Here you can perform actions like sending the object data to the API
-    console.log("Submitted:", inputValue);
-    // Clear input field
-    setInputValue("");
+    try {
+      const response = await axios.post(
+        "https://jsonplaceholder.typicode.com/posts",
+        {
+          title: inputValue,
+        }
+      );
+      console.log("Object saved:", response.data);
+      updateObjects(); // Call the parent component function to update the list of objects
+      setInputValue("");
+    } catch (error) {
+      console.error("Error saving object:", error);
+    }
   };
 
   return (
